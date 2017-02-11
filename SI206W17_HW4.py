@@ -1,5 +1,6 @@
 import unittest
 import requests
+import codecs
 from bs4 import BeautifulSoup
 
 
@@ -20,10 +21,9 @@ try:
 	file.close()
 
 except:
-	new = requests.get("http://www.nytimes.com")
-	file_text = new.text
+	file_text = requests.get("https://www.nytimes.com").text
 
-	file = open("nytimes_data.html", "w")
+	file = open("nytimes_data.html", "w", encoding="utf-8")
 	file.write(file_text)
 	file.close()
 
@@ -54,15 +54,14 @@ except:
 ## HINT: Remember that you'll need to open the file you created in Part 1, read the contets into one big string, and make a BeautifulSoup object out of that string!
 ## NOTE that the provided link does not include saving the online data in a file as part of the process. But it still provides very useful hints/tricks about how to look for and identify the headlines on the NY Times page.
 
-soup = BeautifulSoup(file_text, "lxml")
+soup = BeautifulSoup(file_text, "html.parser")
 
+nytimes_headlines = []
 for story_heading in soup.find_all(class_="story-heading"): 
     if story_heading.a: 
-        print(story_heading.a.text.replace("\n", " ").strip())
-
-    else: 
-        print(story_heading.contents[0].strip())
-
+        nytimes_headlines.append(story_heading.a.text.replace("\n", " ").strip())
+nytimes_headlines = nytimes_headlines[0:9]
+print(nytimes_headlines)
 
 #####################
 
