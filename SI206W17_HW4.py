@@ -57,10 +57,29 @@ except:
 soup = BeautifulSoup(file_text, "html.parser")
 
 nytimes_headlines = []
-for story_heading in soup.find_all(class_="story-heading"): 
-    if story_heading.a: 
-        nytimes_headlines.append(story_heading.a.text.replace("\n", " ").strip())
+collections = soup.find_all(class_="collection")
+#first we search for collections
+for collection in collections:
+	
+	#then we search for story theme-summary lede
+	temp = collection.find_all(class_="story theme-summary lede")
+	#checking to see if we found one
+	if(len(temp)):
+		#if we did, extract the heading and append the text to the list
+		temp = temp[0].find_all(class_="story-heading")
+		nytimes_headlines.append(temp[0].text)
+
+	#we also need to search for story theme-summary
+	temp = collection.find_all(class_="story theme-summary")
+	#checking to see if we found one
+	if(len(temp)):
+		#if we did, extract the heading and append the text to the list
+		temp = temp[0].find_all(class_="story-heading")
+		nytimes_headlines.append(temp[0].text)
+
+#now we're slicing the first ten elements, getting rid of the rest
 nytimes_headlines = nytimes_headlines[0:9]
+
 
 #####################
 
