@@ -61,7 +61,6 @@ for story_heading in soup.find_all(class_="story-heading"):
     if story_heading.a: 
         nytimes_headlines.append(story_heading.a.text.replace("\n", " ").strip())
 nytimes_headlines = nytimes_headlines[0:9]
-print(nytimes_headlines)
 
 #####################
 
@@ -83,23 +82,19 @@ print(nytimes_headlines)
 response = requests.get("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All")
 htmldoc = response.text
 
+
 soup = BeautifulSoup(htmldoc,"html.parser")
 people = soup.find_all("div",{"class":"views-row"})
 umsi_titles = {}
-
-## It may be helpful to translate the following from English to code:
-
-## For each element in the list saved in the variable people,
-## Find the container that holds the name that belongs to that person (HINT: look for something unique, like a property element...)
-## Find the container that holds the title that belongs to that person (HINT: a class name)
-## Grab the text of each of those elements and put them in the dictionary umsi_titles properly
-
-
-
-
-
-
-
+key_pairs = []
+for person in people:
+	## Find the container that holds the name that belongs to that person
+	name = (person.find_all('h2')[1].text)
+	## Find the container that holds the title that belongs to that person (HINT: a class name)
+	title = (person.find_all(class_="field-item even")[3].text)
+	## Grab the text of each of those elements and put them in the dictionary umsi_titles properly
+	key_pairs.append((name, title))
+umsi_titles = dict(key_pairs)
 
 
 
